@@ -16,11 +16,11 @@
   <div style="display: flex; margin-left: 50px; margin-top: 50px">
     <el-table
       :data="tableData"
-      :default-sort="{ prop: 'date', order: 'descending' }"
+      :default-sort="{ prop: 'userId', order: 'descending' }"
     >
-      <el-table-column prop="date" label="Date" sortable />
-      <el-table-column prop="name" label="Name" />
-      <el-table-column prop="address" label="Address" :formatter="formatter" />
+      <el-table-column prop="userId" label="userID" sortable />
+      <el-table-column prop="nickName" label="nickName" />
+      <el-table-column prop="phoneNumber" label="phoneNumber" :formatter="formatter" />
     </el-table>
   </div>
 </template>
@@ -33,27 +33,11 @@ export default {
   components: {},
   data() {
     return {
+      search: '',
+      currentPage:1,
+      total:10,
       tableData: [
-        {
-          date: "2016-05-03",
-          name: "Tom",
-          address: "No. 189, Grove St, Los Angeles",
-        },
-        {
-          date: "2016-05-02",
-          name: "Tom",
-          address: "No. 189, Grove St, Los Angeles",
-        },
-        {
-          date: "2016-05-04",
-          name: "Tom",
-          address: "No. 189, Grove St, Los Angeles",
-        },
-        {
-          date: "2016-05-01",
-          name: "Tom",
-          address: "No. 189, Grove St, Los Angeles",
-        },
+        
       ],
     };
   },
