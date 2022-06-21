@@ -18,14 +18,14 @@ import java.util.Set;
 public class User {
 
     @TableId(value = "user_id", type = IdType.AUTO)
-    private Integer user_id;
+    private Integer userId;
     private String password;
     private String name;
     private String email;
-    private String nick_name;
-    private Integer id_card;
+    private String nickName;
+    private String idCard;
     private Integer age;
     private Integer sex;
-    private Integer phone_number;
+    private String phoneNumber;
 
 }

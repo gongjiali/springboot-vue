@@ -1,34 +1,38 @@
 package com.example.demo.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.mapper.Mapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.common.Result;
-import com.example.demo.entity.User;
-import com.example.demo.mapper.UserMapper;
+import com.example.demo.entity.Paper;
+import com.example.demo.mapper.PaperMapper;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
 @RestController
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/paper")
+public class PaperController {
     @Resource
-    UserMapper userMapper;
-
+    PaperMapper paperMapper;
 
     @GetMapping
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,
                               @RequestParam(defaultValue = "") String search){
-        LambdaQueryWrapper<User>  wrapper = Wrappers.<User>lambdaQuery();
+        LambdaQueryWrapper<Paper>  wrapper = Wrappers.<Paper>lambdaQuery();
         if(StringUtils.isNotBlank(search)){
-            wrapper.like(User::getNickName, search);
+            wrapper.like(Paper::getContent, search);
         }
-        Page<User> userpage = userMapper.selectPage(new Page<>(pageNum,pageSize), wrapper);
-        //Page<User> userPage = userMapper.findPage(new Page<>(pageNum, pageSize), search);
-        return Result.success(userpage);
+        wrapper.ne(Paper::getStatus,0);
+        Page<Paper> paperpage = paperMapper.selectPage(new Page<>(pageNum,pageSize), wrapper);
+
+        return Result.success(paperpage);
     }
 
 }
+
+
+
