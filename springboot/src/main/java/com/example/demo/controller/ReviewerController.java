@@ -1,12 +1,12 @@
 package com.example.demo.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.common.Result;
 import com.example.demo.entity.Reviewer;
-import com.example.demo.entity.User;
 import com.example.demo.mapper.ReviewerMapper;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,8 +18,16 @@ public class ReviewerController {
     @Resource
     ReviewerMapper reviewerMapper;
 
-    @PostMapping
-    public Result<?> save(@RequestBody Reviewer reviewer){
+    @PostMapping("/register")
+    public Result<?> register(@RequestBody Reviewer reviewer) {
+        Reviewer res = reviewerMapper.selectOne(Wrappers.<Reviewer>lambdaQuery().eq(Reviewer::getName, reviewer.getName()));
+        if (res != null) {
+            return Result.error("-1", "用户名重复");
+        }
+//        if (user.getPassword() == null) {
+//            user.setPassword("123456");
+//        }
+
         reviewerMapper.insert(reviewer);
         return Result.success();
     }
@@ -45,5 +53,11 @@ public class ReviewerController {
         wrapper.eq(Reviewer::getCategory,cat);
         Page<Reviewer> reviewerpage = reviewerMapper.selectPage(new Page<>(pageNum,pageSize), wrapper);
         return Result.success(reviewerpage);
+    }
+
+    @DeleteMapping("/{id}")
+    public Result<?> update(@PathVariable Long id) {
+        reviewerMapper.deleteById(id);
+        return Result.success();
     }
 }

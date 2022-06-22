@@ -20,7 +20,7 @@
     >
       <el-table-column prop="paperId" label="ID" sortable />
       <el-table-column prop="title" label="Title" />
-      <el-table-column prop="author" label="age" />
+      <el-table-column prop="author" label="Author" />
       <el-table-column prop="specialistId" label="Reviewer" />
       <el-table-column>
         <el-button type="primary">detail</el-button>
