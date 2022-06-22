@@ -7,10 +7,12 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.common.Result;
 import com.example.demo.entity.Paper;
+import com.example.demo.entity.User;
 import com.example.demo.mapper.PaperMapper;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/paper")
@@ -30,6 +32,12 @@ public class PaperController {
         Page<Paper> paperpage = paperMapper.selectPage(new Page<>(pageNum,pageSize), wrapper);
 
         return Result.success(paperpage);
+    }
+
+    @PostMapping("/assign")
+    public Result<?> assign(@RequestBody Paper paper) {
+        paperMapper.updateById(paper);
+        return Result.success();
     }
 
 }

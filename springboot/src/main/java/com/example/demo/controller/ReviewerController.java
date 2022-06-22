@@ -37,4 +37,13 @@ public class ReviewerController {
         return Result.success(reviewerpage);
     }
 
+    @GetMapping("/bycat")
+    public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
+                              @RequestParam(defaultValue = "10") Integer pageSize,
+                              @RequestParam(defaultValue = "") Integer cat){
+        LambdaQueryWrapper<Reviewer>  wrapper = Wrappers.<Reviewer>lambdaQuery();
+        wrapper.eq(Reviewer::getCategory,cat);
+        Page<Reviewer> reviewerpage = reviewerMapper.selectPage(new Page<>(pageNum,pageSize), wrapper);
+        return Result.success(reviewerpage);
+    }
 }
