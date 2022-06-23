@@ -15,16 +15,16 @@
       >
         <el-menu-item index="author">
           <el-icon><icon-menu /></el-icon>
-          <span>Authors</span>
+          <span>投稿人</span>
         </el-menu-item>
         <el-menu-item index="reviewer">
           <el-icon><icon-menu /></el-icon>
-          <span>Reviewers</span>
+          <span>审稿人</span>
         </el-menu-item>
 
-        <el-menu-item-group title="Articles">
-          <el-menu-item index="article">assigned article</el-menu-item>
-          <el-menu-item index="un_article">unassigned article</el-menu-item>
+        <el-menu-item-group title="稿件">
+          <el-menu-item index="article">已分配稿件</el-menu-item>
+          <el-menu-item index="un_article">未分配稿件</el-menu-item>
         </el-menu-item-group>
       </el-menu>
     </el-col>
