@@ -3,13 +3,13 @@
     <span>
       <el-input
         v-model="search"
-        placeholder="Please input"
+        placeholder="请输入"
         clearable
         style="margin-left: 20px; padding: 10px; width: 350px"
       />
     </span>
     <span style="padding: 10px">
-      <el-button type="primary" @click="gosearch">search</el-button>
+      <el-button type="primary" @click="gosearch">搜索</el-button>
     </span>
   </div>
 
@@ -19,11 +19,20 @@
       :default-sort="{ prop: 'paperId', order: 'ascending' }"
     >
       <el-table-column prop="paperId" label="ID" sortable />
-      <el-table-column prop="title" label="Title" />
-      <el-table-column prop="author" label="Author" />
-      <el-table-column prop="specialistId" label="Reviewer" />
+      <el-table-column prop="title" label="标题" />
+      <el-table-column prop="author" label="作者" />
+      <el-table-column prop="specialistId" label="审稿人" />
       <el-table-column>
-        <el-button type="primary">detail</el-button>
+        <template #default="scope">
+          <el-button
+            type="primary"
+            @click="
+              show = true;
+              form = scope.row;
+            "
+            >详情</el-button
+          >
+        </template>
       </el-table-column>
     </el-table>
   </div>
@@ -42,6 +51,32 @@
       @current-change="handleCurrentChange"
     />
   </div>
+  <div>
+    <el-dialog title="论文详细信息" v-model="show" width="40%">
+      <el-descriptions :column="1">
+        <el-descriptions-item label="稿件编号：">{{
+          form.paperId
+        }}</el-descriptions-item>
+        <el-descriptions-item label="稿件标题：">{{
+          form.title
+        }}</el-descriptions-item>
+        <el-descriptions-item label="作者：">{{
+          form.author
+        }}</el-descriptions-item>
+        <el-descriptions-item label="类别：">{{
+          form.category
+        }}</el-descriptions-item>
+        <el-descriptions-item label="稿件状态：">{{
+          form.status
+        }}</el-descriptions-item>
+      </el-descriptions>
+      <el-button-group style="margin-bottom: 15px; width: 100%">
+        <el-button type="info" plain @click="ttDownload(form.filePath)"
+          >下载</el-button
+        >
+      </el-button-group>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -56,7 +91,10 @@ export default {
       currentPage: 1,
       pageSize: 10,
       total: 0,
+      show: false,
       tableData: [],
+      show: false,
+      form: [],
     };
   },
   created() {
@@ -77,6 +115,9 @@ export default {
       this.load();
     },
 
+    ttDownload(filePath) {
+      window.open(filePath, "_self");
+    },
     load() {
       request
         .get("/paper", {

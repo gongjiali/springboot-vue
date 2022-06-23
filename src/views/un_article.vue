@@ -3,13 +3,13 @@
     <span>
       <el-input
         v-model="search"
-        placeholder="Please input"
+        placeholder="请输入"
         clearable
         style="margin-left: 20px; padding: 10px; width: 350px"
       />
     </span>
     <span style="padding: 10px">
-      <el-button type="primary" @click="gosearch">search</el-button>
+      <el-button type="primary" @click="gosearch">搜索</el-button>
     </span>
   </div>
 
@@ -19,8 +19,8 @@
       :default-sort="{ prop: 'paperId', order: 'ascending' }"
     >
       <el-table-column prop="paperId" label="ID" sortable />
-      <el-table-column prop="title" label="Title" />
-      <el-table-column prop="author" label="Author" />
+      <el-table-column prop="title" label="标题" />
+      <el-table-column prop="author" label="作者" />
       <el-table-column>
         <template #default="scope">
           <!-- 弹窗 -->
@@ -31,28 +31,29 @@
               load_reviewers();
               currentPaper = scope.row;
             "
-            >assign reviewer</el-button
+            >分配审稿人</el-button
           >
 
-          <el-dialog
-            v-model="dialogVisible"
-            title="Assign reviewer"
-            width="30%"
-          >
+          <el-dialog v-model="dialogVisible" title="分配审稿人" width="30%">
             <el-table
               :data="specialistData"
               :default-sort="{ prop: 'specialistId', order: 'ascending' }"
               @selection-change="handleSelectionChange"
             >
               <el-table-column prop="specialistId" label="ID" sortable />
-              <el-table-column prop="name" label="Name" />
+              <el-table-column prop="name" label="姓名" />
               <el-table-column type="selection" />
             </el-table>
             <template #footer>
               <span class="dialog-footer">
-                <el-button @click="dialogVisible = false">Cancel</el-button>
-                <el-button type="primary" @click="dialogVisible = false; assign()"
-                  >Confirm</el-button
+                <el-button @click="dialogVisible = false">取消</el-button>
+                <el-button
+                  type="primary"
+                  @click="
+                    dialogVisible = false;
+                    assign();
+                  "
+                  >确认</el-button
                 >
               </span>
             </template>
@@ -60,7 +61,16 @@
         </template>
       </el-table-column>
       <el-table-column>
-        <el-button type="primary">detail</el-button>
+        <template #default="scope2">
+          <el-button
+            type="primary"
+            @click="
+              show = true;
+              form = scope2.row;
+            "
+            >详情</el-button
+          >
+        </template>
       </el-table-column>
     </el-table>
   </div>
@@ -79,6 +89,32 @@
       @current-change="handleCurrentChange"
     />
   </div>
+  <div>
+    <el-dialog title="论文详细信息" v-model="show" width="40%">
+      <el-descriptions :column="1">
+        <el-descriptions-item label="稿件编号：">{{
+          form.paperId
+        }}</el-descriptions-item>
+        <el-descriptions-item label="稿件标题：">{{
+          form.title
+        }}</el-descriptions-item>
+        <el-descriptions-item label="作者：">{{
+          form.author
+        }}</el-descriptions-item>
+        <el-descriptions-item label="类别：">{{
+          form.category
+        }}</el-descriptions-item>
+        <el-descriptions-item label="稿件状态：">{{
+          form.status
+        }}</el-descriptions-item>
+      </el-descriptions>
+      <el-button-group style="margin-bottom: 15px; width: 100%">
+        <el-button type="info" plain @click="ttDownload(form.filePath)"
+          >下载</el-button
+        >
+      </el-button-group>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -90,13 +126,15 @@ export default {
   components: {},
   data() {
     return {
-      currentPaper:[],
+      currentPaper: [],
       ChosenSpecialists: [],
       dialogVisible: false,
       search: "",
       currentPage: 1,
       pageSize: 10,
       total: 0,
+      show: false,
+      form: [],
       tableData: [],
       specialistData: [],
     };
@@ -106,12 +144,15 @@ export default {
   },
   methods: {
     handleSelectionChange(val) {
-      console.log(val)
-      this.ChosenSpecialists = val.map(v=>v.specialistId)  // [{id,name}, {id,name}] => [id,id]
-      console.log(this.ChosenSpecialists)
+      console.log(val);
+      this.ChosenSpecialists = val.map((v) => v.specialistId); // [{id,name}, {id,name}] => [id,id]
+      console.log(this.ChosenSpecialists);
     },
     gosearch() {
       this.load();
+    },
+    ttDownload(filePath) {
+      window.open(filePath, "_self");
     },
     handleSizeChange(pageSize) {
       console.log(pageSize);
@@ -123,24 +164,23 @@ export default {
       this.currentPage = pageNum;
       this.load();
     },
-    assign(){
+    assign() {
       console.log(this.currentPaper);
       this.currentPaper.status = 1;
       this.currentPaper.specialistId = this.ChosenSpecialists[0];
       console.log(this.currentPaper);
       if (!this.ChosenSpecialists.length) {
-        this.$message.warning("请选择数据！")
-        return
+        this.$message.warning("请选择数据！");
+        return;
       }
-      request.post("paper/assign", this.currentPaper).then(res => {
-        if (res.code === '0') {
-          this.$message.success("分配成功")
-          this.load()
+      request.post("paper/assign", this.currentPaper).then((res) => {
+        if (res.code === "0") {
+          this.$message.success("分配成功");
+          this.load();
         } else {
-          this.$message.error(res.msg)
+          this.$message.error(res.msg);
         }
-      })
-
+      });
     },
     load() {
       request
