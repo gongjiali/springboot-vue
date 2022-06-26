@@ -14,12 +14,16 @@ public class Paper {
     private String title;
     private String content;
     private String author;
-    private Integer category;
+    private String category;
     private String tag;
     private Integer userId;
     private Integer specialistId;
     private Integer status;
     private String submitDate;
+
+    private String filePath;
     private String checkDate;
+    private String review;
+    private Integer status1;
 
 }

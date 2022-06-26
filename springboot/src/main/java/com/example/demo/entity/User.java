@@ -1,31 +1,36 @@
 package com.example.demo.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Set;
-
-@TableName("user")
-@Data
+@TableName("user")//与数据库表的名字一一对应
+@Data//lombok 简化代码，通过注解写get set
 public class User {
+//    @TableId(type = IdType.AUTO)//自增
+//    private Integer id;
+//    private String username;
 
-    @TableId(value = "user_id", type = IdType.AUTO)
+
+//
+
+//    private String sex;
+//    private String address;
+
+//    private Integer role;
+//
+@TableId(value = "user_id", type = IdType.AUTO)
     private Integer userId;
     private String password;
     private String name;
     private String email;
     private String nickName;
-    private String idCard;
-    private Integer age;
-    private Integer sex;
-    private String phoneNumber;
 
+    private Integer age;
+    private Integer sex; // 崔
+    private String phoneNumber;
+    private String address;//
+    private Integer role;
+    private String category;
 }

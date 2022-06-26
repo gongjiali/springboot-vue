@@ -1,0 +1,97 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    #    url: jdbc:mysql://127.0.0.1:3306/book?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    url: jdbc:mysql://localhost:3306/TouGao?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: root
+    password: hxlHXL980508
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      maximum-pool-size: 8
+      minimum-idle: 4
+      idle-timeout: 30000
+      connection-timeout: 30000
+      max-lifetime: 45000
+      auto-commit: true
+      pool-name: PaperHikariCP
+  redis:
+    host: 39.108.138.143
+    port: 6379
+    password: fuck@you
+    timeout: 5000
+    database: 2
+    # rabbitmq 服务器信息配置
+  rabbitmq:
+    host: 114.115.175.199
+    port: 5672
+    username: admin
+    password: 734190426l
+    publisherConfirms: true
+    # rabbitmq是多租户系统 virtualhost 用于资源的逻辑分组和分离
+    virtual-host: /
+    listener:
+      simple:
+        concurrency: 10
+        max-concurrency: 10
+        # 消费者未能及时处理的最大消息数量
+        prefetch: 1
+        # 在启动时 自动启动相关
+        auto-startup: true
+        # 在消息消费失败的情况下，是否重新入队 Whether rejected deliveries are re-queued by default.
+        default-requeue-rejected: true
+    # 重试机制
+    template:
+      retry:
+        enabled: true
+        initial-interval: 1000
+        # 最大重试次数
+        max-attempts: 3
+        max-interval: 10000
+        multiplier: 1.0
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+  mail:
+    protocol: smtp
+    host: smtp.qq.com
+    username: 397655952@qq.com
+    password: lmlezjwnigjbcbcg
+    default-encoding: utf-8
+    properties:
+      mail:
+        port: 465
+        smtp:
+          auth: true
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
+            fallback: false
+          starttls:
+            enable: true
+            required: true
+  # 文件上传大小限制
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+
+mybatis:
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true # 若超过最大页数或页数小于0也会返回数据
+  support-methods-arguments: true
+  params: count=countsql
+
+logging:
+  level:
+    #打印SQL信息
+    com.yafeng.paperbackend.mapper: DEBUG
+
